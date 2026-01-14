@@ -1,0 +1,4 @@
+38FzD5zDVOsicSLt7a1bIcJ1qR1_9BpsGnVrBoJQveg1D1j4
+cmd token- ngrok config add-authtoken 38FzD5zDVOsicSLt7a1bIcJ1qR1_9BpsGnVrBoJQveg1D1j4
+ngrok token- authtoken: 38FzD5zDVOsicSLt7a1bIcJ1qR1_9BpsGnVrBoJQveg1D1j4
+export NGROK_AUTHTOKEN=38FzD5zDVOsicSLt7a1bIcJ1qR1_9BpsGnVrBoJQveg1D1j4

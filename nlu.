@@ -1,0 +1,91 @@
+version: "3.1"
+
+nlu:
+- intent: greet
+  examples: |
+    - сайн уу
+    - сайн байна уу
+    - hey
+    - hello
+    - hi
+
+- intent: goodbye
+  examples: |
+    - баяртай
+    - за баяртай
+    - bye
+    - goodbye
+
+- intent: ask_report_template
+  examples: |
+    - тайлангийн загвар өгөөч
+    - өдөр тутмын тайлангийн template хэрэгтэй
+    - тайланг ямар бүтэцтэй бичих вэ
+    - give me a daily report template
+    - daily report format?
+
+- intent: ask_report_requirements
+  examples: |
+    - тайланд юу юу байх шаардлагатай вэ
+    - тайлангийн шаардлага юу вэ
+    - өдөр тутмын тайланд заавал юу оруулах вэ
+    - what should a report include
+    - report requirements?
+
+- intent: ask_report_example
+  examples: |
+    - жишээ тайлан харуул
+    - сайн тайлангийн жишээ өгөөч
+    - show me an example report
+    - example daily report please
+
+- intent: ask_blockers_solutions
+  examples: |
+    - асуудал, алдааны шийдлийг яаж бичих вэ
+    - blocker-оо тайланд яаж оруулах вэ
+    - bug гарвал тайланд яаж бичих вэ
+    - how to write blockers and solutions
+    - how to describe bugs in report
+
+- intent: ask_next_steps
+  examples: |
+    - цаашид юу хийхээ яаж бичих вэ
+    - дараагийн алхам хэсгийг яаж бичих вэ
+    - next steps-г яаж бичих вэ
+    - how to write next steps
+
+- intent: ask_where_to_submit
+  examples: |
+    - тайлангаа хаана илгээх вэ
+    - link-ээ хаашаа явуулах вэ
+    - report-оо яаж явуулах вэ
+    - where should I submit my report
+    - where do I send the link
+
+- intent: change_language
+  examples: |
+    - англи
+    - english
+    - монгол
+    - mongolian
+    - англиар хариул
+    - монголоор хариул
+
+- intent: submit_report
+  examples: |
+    - энэ миний тайлан https://example.com/report1
+    - тайлангийн линк: http://example.com/a/b
+    - энд байна: https://docs.google.com/document/d/xxxx
+    - my report link is https://example.com/report2
+    - here is the report https://drive.google.com/file/d/xxxx
+
+# REGEX
+- regex: link
+  examples: |
+    - https?://\S+
+
+- regex: email
+  examples: |
+    - [A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}
+
+# ENTITY (optional) – нэрийг шууд entity болгохгүйгээр form-аар авчих боломжтой.

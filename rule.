@@ -1,0 +1,92 @@
+version: "3.1"
+
+rules:
+
+# -------------------------------------------------
+# 1. Мэндчилгээ → login_form эхлүүлэх
+# -------------------------------------------------
+- rule: Start login after greet
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - action: login_form
+  - active_loop: login_form
+
+
+# -------------------------------------------------
+# 2. login_form дууссаны дараа menu харуулах
+# -------------------------------------------------
+- rule: Finish login form
+  condition:
+  - active_loop: login_form
+  steps:
+  - action: login_form
+  - active_loop: null
+  - action: utter_login_ok
+  - action: utter_show_menu
+
+
+# -------------------------------------------------
+# 3. Тайлангийн асуултууд (menu-гээс)
+# -------------------------------------------------
+- rule: Ask report template
+  steps:
+  - intent: ask_report_template
+  - action: utter_report_template
+  - action: utter_show_menu
+
+- rule: Ask report requirements
+  steps:
+  - intent: ask_report_requirements
+  - action: utter_report_requirements
+  - action: utter_show_menu
+
+- rule: Ask report example
+  steps:
+  - intent: ask_report_example
+  - action: utter_report_example
+  - action: utter_show_menu
+
+- rule: Ask blockers and solutions
+  steps:
+  - intent: ask_blockers_solutions
+  - action: utter_blockers_solutions
+  - action: utter_show_menu
+
+- rule: Ask next steps
+  steps:
+  - intent: ask_next_steps
+  - action: utter_next_steps
+  - action: utter_show_menu
+
+- rule: Ask where to submit
+  steps:
+  - intent: ask_where_to_submit
+  - action: utter_where_to_submit
+  - action: utter_show_menu
+
+
+# -------------------------------------------------
+# 4. ⭐ ХАМГИЙН ЧУХАЛ RULE ⭐
+# submit_report → action_save_report
+# -------------------------------------------------
+- rule: Handle report submission
+  steps:
+  - intent: submit_report
+  - action: action_save_report
+
+
+# -------------------------------------------------
+# 5. report_submission_form дуусах үед
+# (линк асууж байгаад авсан тохиолдол)
+# -------------------------------------------------
+- rule: Finish report submission form
+  condition:
+  - active_loop: report_submission_form
+  steps:
+  - action: report_submission_form
+  - active_loop: null
+  - action: action_save_report
+  - action: utter_show_menu
+
+

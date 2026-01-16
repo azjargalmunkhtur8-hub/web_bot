@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="mn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI Dev Camp – Report Bot</title>
+
+  <style>
+    :root{
+      --bg1:#0b1020;
+      --bg2:#111a33;
+      --card:#0f1730cc;
+      --text:#eaf0ff;
+      --muted:#a8b3d1;
+      --line:#223055;
+      --accent:#6ea8ff;
+      --accent2:#8ef0c6;
+      --shadow: 0 18px 45px rgba(0,0,0,.45);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 20% 10%, rgba(110,168,255,.22), transparent 60%),
+        radial-gradient(900px 550px at 80% 30%, rgba(142,240,198,.16), transparent 60%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+    }
+    .wrap{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 18px 90px;
+    }
+    .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      padding:18px 18px;
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .brand{ display:flex; align-items:center; gap:12px; }
+    .logo{
+      width:42px;height:42px;border-radius:14px;
+      background:
+        radial-gradient(14px 14px at 30% 30%, rgba(255,255,255,.85), transparent 70%),
+        linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 10px 26px rgba(110,168,255,.22);
+    }
+    .title h1{ margin:0; font-size:16px; letter-spacing:.2px; line-height:1.15; }
+    .title p{ margin:3px 0 0; color:var(--muted); font-size:12.5px; }
+
+    .pill{
+      display:flex; gap:8px; align-items:center;
+      border:1px solid var(--line);
+      padding:8px 12px;
+      border-radius:999px;
+      background: rgba(15,23,48,.55);
+      color:var(--muted);
+      font-size:12px;
+    }
+    .dot{
+      width:9px;height:9px;border-radius:50%;
+      background: var(--accent2);
+      box-shadow: 0 0 0 4px rgba(142,240,198,.12);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:16px;
+      margin-top:16px;
+    }
+    @media (max-width: 900px){ .grid{ grid-template-columns: 1fr; } }
+
+    .card{
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      overflow:hidden;
+    }
+    .card .hd{
+      padding:14px 16px;
+      border-bottom:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01));
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .card .hd h2{ margin:0; font-size:14px; letter-spacing:.2px; }
+    .card .bd{
+      padding:14px 16px 16px;
+      color: var(--muted);
+      font-size:13px;
+      line-height:1.55;
+    }
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      color: var(--text);
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      border-bottom-color: rgba(255,255,255,.18);
+      padding: 2px 6px;
+      border-radius: 8px;
+      white-space: nowrap;
+    }
+    .list{ margin:10px 0 0; padding:0 0 0 18px; }
+    .list li{ margin:6px 0; }
+
+    /* ✅ Force chat always visible on top */
+    .rw-widget-container,
+    .rw-launcher,
+    .rw-conversation-container {
+      z-index: 999999 !important;
+    }
+
+    /* (сонголтоор) launcher товчийг харагдахгүй болгох — учир нь бид чатийг шууд нээнэ */
+    /* .rw-launcher { display:none !important; } */
+  </style>
+
+  <!-- ✅ Webchat script (найдвартай) -->
+  <script src="./rasa-webchat.js"></script>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="title">
+          <h1>AI Dev Camp – Daily Report Assistant</h1>
+          <p>MN / EN • Тайлан бичих зөвлөмж + линк хадгалалт</p>
+        </div>
+      </div>
+      <div class="pill" title="Server status">
+        <span class="dot"></span>
+        Online (localhost:5005)
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="hd">
+          <h2>Юу хийдэг вэ?</h2>
+          <span class="kbd">/greet</span>
+        </div>
+        <div class="bd">
+          Энэ chatbot нь багийн гишүүдэд <b>өдөр тутмын тайлан</b> бэлтгэхэд тусалж:
+          <ul class="list">
+            <li>Тайлангийн загвар, шаардлага, жишээ өгнө</li>
+            <li>“Асуудал / шийдэл” хэсгийг яаж бичихийг зөвлөнө</li>
+            <li>Тайлангийн <b>линк</b> илгээвэл хадгална (<span class="kbd">submitted_reports.jsonl</span>)</li>
+          </ul>
+          <p style="margin:10px 0 0;color:var(--muted)">
+            Чат баруун доод буланд <b>шууд нээгдэнэ</b>. Шууд асуултаа бичээрэй.
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="hd">
+          <h2>Тайлбар</h2>
+          <span class="kbd">Tips</span>
+        </div>
+        <div class="bd">
+          <ul class="list">
+            <li>Эхлээд <b>нэр</b> + <b>имэйл</b> оруулна</li>
+            <li>Дараа нь menu-гээс асуулт сонгоно</li>
+            <li>Эсвэл тайлангийн link-ээ <b>шууд</b> явуулна</li>
+          </ul>
+          <p style="margin:10px 0 0">
+            Link буруу бол бот Teams folder path-ыг сануулна.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Auto-open webchat init (АЛДААГҮЙ) -->
+  <script>
+    // normalize
+    window.WebChat = window.WebChat || window.rasaWebchat;</script>
+
+    function ready() {
+      return !!(window.WebChat && window.WebChat.default && typeof window.WebChat.default.init === "function");
+    }
+
+    function initOnce() {
+      if (!ready()) return false;
+      if (window.__WEBCHAT_INIT__) return true;
+
+      window.WebChat.default.init({
+        initPayload: "/greet",
+        socketUrl: "http://localhost:5005",
+        socketPath: "/socket.io/",
+        title: "Тайлан Туслах Bot",
+        subtitle: "MN / EN",
+        showMessageDate: true
+      });
+
+      window.__WEBCHAT_INIT__ = true;
+      return true;
+    }
+
+    function autoOpen() {
+      const launcher = document.querySelector(".rw-launcher");
+      if (launcher) {
+        launcher.click(); // автоматаар нээх
+        return true;
+      }
+      // fallback: хэрвээ conversation container гарчихсан байвал ил болгоно
+      const convo = document.querySelector(".rw-conversation-container");
+      if (convo) {
+        convo.style.display = "block";
+        convo.style.visibility = "visible";
+        convo.style.opacity = "1";
+        return true;
+      }
+      return false;
+    }
+
+    // init + auto open retry loop
+    let tries = 0;
+    const timer = setInterval(() => {
+      tries += 1;
+      initOnce();
+      if (autoOpen() || tries > 60) clearInterval(timer);
+    }, 150);
+  </script>
+</body>
+</html>

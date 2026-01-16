@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Chatbot</title>
+<style>
+  body {
+    margin: 0;
+    font-family: "Times New Roman", serif;
+    background: linear-gradient(to bottom right, #4dabf7, #1c7ed6);
+    height: 100vh;
+    display: flex;
+  }
+
+  /* Sidebar */
+  #sidebar {
+    width: 250px;
+    background: rgba(0, 0, 0, 0.25);
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  #sidebar h2 { font-size: 20px; margin-bottom: 15px; }
+  #sidebar button {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  #sidebar button:hover { background: rgba(255,255,255,0.35); }
+
+  /* Chat area */
+  #chat-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  #chat-box {
+    width: 100%;
+    max-width: 600px;
+    height: 80vh;
+    background: rgba(255,255,255,0.9);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  }
+
+  #messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .message {
+    padding: 10px 15px;
+    border-radius: 25px;
+    max-width: 70%;
+    word-wrap: break-word;
+  }
+  .user { background: #1c7ed6; color: white; align-self: flex-end; }
+  .bot { background: #e9ecef; color: black; align-self: flex-start; }
+
+  /* Input area */
+  #input-area {
+    display: flex;
+    padding: 10px 20px;
+    background: rgba(0,0,0,0.05);
+    align-items: center;
+  }
+  #input-area input {
+    flex: 1;
+    padding: 10px 15px;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-family: "Times New Roman", serif;
+  }
+  #input-area button {
+    margin-left: 10px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #1c7ed6;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+  }
+  #input-area button:hover { background: #1971c2; }
+</style>
+</head>
+<body>
+
+<div id="sidebar">
+  <div>
+    <h2>Your Chats</h2>
+    <button onclick="newChat()">+ New Chat</button>
+  </div>
+  <button onclick="signOut()">Sign Out</button>
+</div>
+
+<div id="chat-container">
+  <div id="chat-box">
+    <div id="messages"></div>
+    <div id="input-area">
+      <input id="user-input" placeholder="Асуултаа бичнэ үү...">
+      <button onclick="sendMessage()">➤</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const messagesDiv = document.getElementById("messages");
+
+function addMessage(sender, text) {
+  const msg = document.createElement("div");
+  msg.classList.add("message", sender);
+  msg.textContent = text;
+  messagesDiv.appendChild(msg);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+// Bot анхны мессеж
+addMessage("bot", "Сайн уу 👋 Өнөөдрийн тайлангаа явуулах уу?");
+
+async function sendMessage() {
+  const input = document.getElementById("user-input");
+  const text = input.value.trim();
+  if(!text) return;
+
+  addMessage("user", text);
+  input.value = "";
+
+  try {
+    const res = await fetch("http://localhost:5005/webhooks/rest/webhook", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sender: "web_user", message: text })
+    });
+    const data = await res.json();
+    data.forEach(msg => addMessage("bot", msg.text));
+  } catch (err) {
+    addMessage("bot", "❌ Rasa сервер холбогдоогүй байна.");
+  }
+}
+
+function newChat() {
+  messagesDiv.innerHTML = "";
+  addMessage("bot", "Сайн уу 👋 Өнөөдрийн тайлангаа явуулах уу?");
+}
+
+function signOut() {
+  alert("Sign out хийлээ!");
+  messagesDiv.innerHTML = "";
+}
+</script>
+
+</body>
+</html>
